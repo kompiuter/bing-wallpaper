@@ -11,6 +11,7 @@ namespace BingWallpaper.Models
     public class BingDayImageProvider : IImageProvider
     {
         private readonly string _cultureInfo;
+        // CultureInfo can be specified to receive images from different markets
         public BingDayImageProvider(string cultureInfo = "en-US")
         {
             _cultureInfo = cultureInfo;
