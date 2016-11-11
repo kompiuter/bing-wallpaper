@@ -38,4 +38,4 @@ HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
 
 # Compatibility
 
-I've only tested this on Windows 10 as an admin user. If you face any problems please open an issue!
+I've only tested this on Windows 7 and Windows 10 as an admin user. If you face any problems please open an issue!
