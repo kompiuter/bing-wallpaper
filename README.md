@@ -1,17 +1,17 @@
 # Bing Wallpaper
-Background process that changes your wallpaper every day according to Bing's image of the day.
+Background process that changes your wallpaper every day to Bing's image of the day.
 
 # Usage
 
-Grab the code
+ - Grab the code
 
 ```bash
-https://github.com/kompiuter/bing-wallpaper.git
+git clone https://github.com/kompiuter/bing-wallpaper.git
 ````
 
-Build the code
+ - Build the code
 
-Run the application
+ - Run the application
 
 ```
 .../BingWallpaper/bin/Release/BingWallpaper.exe
@@ -19,20 +19,21 @@ Run the application
 
 # What does this do?
 
-Running the application will create a background process that changes your desktop background to Bing's image of the day and continues to do so every 24 hours.
+Running the executable will create a background process that immediately changes your desktop background to Bing's image of the day then does so again every 24 hours.
 
-It will add a key to the registry so the application executes on startup, so you don't have to run it each time.
+It will automatically add a key to the registry to execute on startup, so that you don't have to run it after each reboot.
 
-It will also log information to a file log.txt, found in the executable's directory. You can look at this log to determine wether the application is running successfully.
+Info messages or errors are logged to `log.txt`, found in the executable's directory.
 
-# I don't want this anymore, how do I remove it?
+# This was awesome, but I feel like setting my own backgrounds! How do I remove it?
 
-First go to Task Manager and end the process called "BingWallpaper.exe".
+ - Go to Task Manager and end the process `BingWallpaper.exe`.
 
-Finally go to your registry and delete the key named "BingWallpaper", found here:
+ - Go to your registry (regedit in Run) and delete the key `BingWallpaper` under:
 
 ```
 HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+```
 
 # Compatibility
 
