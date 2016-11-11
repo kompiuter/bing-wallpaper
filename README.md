@@ -23,7 +23,7 @@ Running the executable will create a background process that immediately changes
 
 It will automatically add a key to the registry to execute on startup, so that you don't have to run it after each reboot.
 
-Info messages or errors are logged to `log.txt`, found in the executable's directory.
+Messages and/or errors are written to `log.txt`, found in the executable's directory.
 
 # This was awesome, but I feel like setting my own backgrounds! How do I remove it?
 
