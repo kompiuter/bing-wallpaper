@@ -9,7 +9,7 @@ Change your wallpaper every day to Bing's image of the day.
 git clone https://github.com/kompiuter/bing-wallpaper.git
 ````
 
- - Build the code
+ - Build
 
  - Run the application
 
