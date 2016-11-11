@@ -1,5 +1,6 @@
+<img src="https://github.com/kompiuter/bing-wallpaper/blob/master/resources/geckorain.jpg?raw=true" alt="gecko" width="512">
 # Bing Wallpaper
-Change your wallpaper every day to Bing's image of the day.
+Keep your wallpaper up to date with Bing's great image of the day.
 
 # Usage
 
