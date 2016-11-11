@@ -1,5 +1,5 @@
 # Bing Wallpaper
-Background process that changes your wallpaper every day to Bing's image of the day.
+Change your wallpaper every day to Bing's image of the day.
 
 # Usage
 
@@ -25,9 +25,9 @@ It will automatically add a key to the registry to execute on startup, so that y
 
 Messages and/or errors are written to `log.txt`, found in the executable's directory.
 
-# This was awesome, but I feel like setting my own backgrounds! How do I remove it?
+# Uninstall
 
- - Go to Task Manager and end the process `BingWallpaper.exe`.
+ - Go to Task Manager and end the process `BingWallpaper.exe`
 
  - Go to your registry (regedit in Run) and delete the key `BingWallpaper` under:
 
