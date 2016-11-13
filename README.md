@@ -51,7 +51,8 @@ If you forgot to disable startup running and deleted the executable, you can sti
  HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
  ```
  
- OR
+**OR**
+ 
  - Going to Task Manager -> Startup and disabling `BingWallpaper` from there.
 
 # Compatibility
