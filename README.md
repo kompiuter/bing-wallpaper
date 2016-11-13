@@ -1,4 +1,6 @@
-<img src="https://github.com/kompiuter/bing-wallpaper/blob/master/resources/geckorain.jpg?raw=true" alt="gecko" width="768">
+<p align="center">
+  <img src="https://github.com/kompiuter/bing-wallpaper/blob/master/resources/geckorain.jpg?raw=true" alt="gecko" width="728"/>
+</p>
 # Bing Wallpaper
 Keep your wallpaper up to date with Bing's great image of the day, every day.
 
