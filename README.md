@@ -7,7 +7,7 @@ Keep your wallpaper up to date with Bing's great image of the day.
  - Grab the code
 
 ```bash
-git clone https://github.com/kompiuter/bing-wallpaper.git
+git clone https://github.com/MichaelMK/bing-wallpaper.git
 ````
 
  - Build
@@ -26,9 +26,11 @@ It will automatically add a key to the registry to execute on startup, so that y
 
 Messages and/or errors are written to `log.txt`, found in the executable's directory.
 
+I (MichaelMK) added the application to the system tray, so if that breaks let me know
+
 # Uninstall
 
- - Go to Task Manager and end the process `BingWallpaper.exe`
+ - Go to Task Manager and end the process `BingWallpaper.exe` - or do it through the system tray
 
  - Go to your registry (regedit in Run) and delete the key `BingWallpaper` under:
 

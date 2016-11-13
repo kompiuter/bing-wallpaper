@@ -1,41 +1,45 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Drawing;
 using System.Net.Http;
-using System.Text;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 
 namespace BingWallpaper.Models
 {
     public class BingDayImageProvider : IImageProvider
     {
-        private readonly string _cultureInfo;
-        // CultureInfo can be specified to receive images from different markets
-        public BingDayImageProvider(string cultureInfo = "en-US")
-        {
-            _cultureInfo = cultureInfo;
-        }
-
-        public async Task<Uri> Uri()
+        public async Task<Image> GetImage()
         {
             string baseUri = "https://www.bing.com";
             using (var client = new HttpClient())
             {
-                var json = await client.GetStringAsync($"http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt={_cultureInfo}");
-                var res = JsonConvert.DeserializeObject<Result>(json);
-                return new Uri(baseUri + res.images[0].url);
+                using (var jsonStream = await client.GetStreamAsync($"http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US"))
+                {
+                    var ser = new DataContractJsonSerializer(typeof(Result));
+                    var res = (Result)ser.ReadObject(jsonStream);
+                    using (var imgStream = await client.GetStreamAsync(new Uri(baseUri + res.images[0].url)))
+                    {
+                        return Image.FromStream(imgStream);
+                    }
+                }
             }
         }
 
+        [DataContract]
         private class Result
         {
-            public Image[] images { get; set; }
+            [DataMember(Name = "images")]
+            public BingImage[] images { get; set; }
         }
-        private class Image
+        [DataContract]
+        private class BingImage
         {
+            [DataMember(Name = "enddate")]
             public string enddate { get; set; }
+            [DataMember(Name = "url")]
             public string url { get; set; }
+            [DataMember(Name = "urlbase")]
             public string urlbase { get; set; }
         }
     }

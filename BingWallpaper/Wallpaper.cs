@@ -1,18 +1,14 @@
 ﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BingWallpaper
 {
     /*
-     * Wallpaper code taken from Neil N.
+     * Thanks to Neil N. for the wallpaper code:
      * http://stackoverflow.com/a/1061682/4322228
+     * Modified to suit application's needs
      */
     public sealed class Wallpaper
     {
@@ -30,13 +26,8 @@ namespace BingWallpaper
             Stretched
         }
 
-        public static void Set(Uri uri, Style style)
+        public static void Set(Image img, Style style)
         {
-            Image img;
-            using (Stream s = new System.Net.WebClient().OpenRead(uri.ToString()))
-            {
-                img = Image.FromStream(s);
-            }
             string tempPath = Path.Combine(Path.GetTempPath(), "wallpaper.bmp");
             img.Save(tempPath, System.Drawing.Imaging.ImageFormat.Bmp);
 
