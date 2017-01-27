@@ -31,11 +31,15 @@ git clone https://github.com/kompiuter/bing-wallpaper.git
 
 # What does this do?
 
-Running the executable will create a background process that changes your desktop background to Bing's image of the day then does so again every 24 hours.
+Running the application will create a background process that changes your desktop background to Bing's image of the day, repeating every 24 hours.
 
 It adds a key to the registry so that it is run on startup.
 
-A tray icon is visible while the process is running (thanks @MichaelMK) which allows you to either force a wallpaper update, disable startup running or terminate the process.
+A tray icon is visible while the process is running (thanks @MichaelMK) which allows you to:
+*View wallpaper source
+*Force wallpaper update
+*Save wallpaper as image
+*Disable launch on startup.
 
 # Uninstall
 
