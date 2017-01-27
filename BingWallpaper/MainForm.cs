@@ -154,6 +154,9 @@ namespace BingWallpaper
             launch.Click += OnStartupLaunch;
             _trayMenu.MenuItems.Add(launch);
 
+            // Separator
+            _trayMenu.MenuItems.Add("-");
+
             _trayMenu.MenuItems.Add("Exit", (s, e) => Application.Exit());
 
             // Create a tray icon. Here we are setting the tray icon to be the same as the application's icon
