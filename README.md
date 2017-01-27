@@ -24,13 +24,10 @@ git clone https://github.com/kompiuter/bing-wallpaper.git
 .../BingWallpaper/bin/Release/BingWallpaper.exe
 ```
 
-## Download executable
+## Installation
 
-If you don't want to go through the process of building you can find an executable on my personal website:
-
-https://kyriacos.me/projects/bing-wallpaper/binary.zip
-
-However I do recommend you download the source code and build it yourself!
+* Download source code and build yourself
+* Download from [Softpedia](http://www.softpedia.com/get/Desktop-Enhancements/Other-Desktop-Enhancements/KK-Bing-Wallpaper.shtml)
 
 # What does this do?
 
