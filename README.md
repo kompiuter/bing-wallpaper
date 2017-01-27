@@ -37,8 +37,6 @@ It adds a key to the registry so that it is run on startup.
 
 A tray icon is visible while the process is running (thanks @MichaelMK) which allows you to either force a wallpaper update, disable startup running or terminate the process.
 
-Errors are written to `log.txt`, found in the executable's directory.
-
 # Uninstall
 
 Disable running on startup through the tray icon and delete the executable.
