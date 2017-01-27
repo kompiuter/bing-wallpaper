@@ -2,7 +2,7 @@
   <img src="https://github.com/kompiuter/bing-wallpaper/blob/master/resources/geckorain.jpg?raw=true" alt="gecko" width="728"/>
 </p>
 # Bing Wallpaper
-Keep your wallpaper up to date with Bing's great image of the day, every day.
+Keep your wallpaper up to date with Bing's image of the day, every day.
 
 # Usage
 
@@ -35,12 +35,12 @@ Running the application will create a background process that changes your deskt
 
 It adds a key to the registry so that it is run on startup.
 
-A tray icon is visible while the process is running (thanks @MichaelMK) which allows you to:
+A tray icon is visible while the application is running (thanks @MichaelMK) which provides the ability to:
 
 * View wallpaper source
 * Force wallpaper update
 * Save wallpaper as image
-* Disable launch on startup.
+* Disable launch on startup
 
 # Uninstall
 
