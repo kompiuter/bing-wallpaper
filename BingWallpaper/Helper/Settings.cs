@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BingWallpaper
 {
-    class Settings
+    public class Settings
     {
         private Options _options;
         private string _settingsPath;
