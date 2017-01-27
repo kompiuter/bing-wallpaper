@@ -43,18 +43,20 @@ A tray icon is visible while the application is running (thanks @MichaelMK) whic
 
 # Uninstall
 
-Disable running on startup through the tray icon and delete the executable.
+Disable startup launch through the tray icon and then delete the executable.
 
-If you forgot to disable startup running and deleted the executable, you can still disable it by either:
+
+
+You may also disable startup launch by either of these ways:
  
  - Going to your registry (`regedit` in Run) and deleting the key `BingWallpaper` under: `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run`
  
 **OR**
  
- - Going to `Task Manager -> Startup` and disabling `BingWallpaper` from there.
+ - Going to `Task Manager -> Startup` and disabling `BingWallpaper`.
 
 # Compatibility
 
 This only works on Windows systems.
 
-So far I've tested it on Windows 7 and Windows 10 as an admin user. If you face any problems please open an issue!
+I've tested it on Windows 7 and Windows 10 as an admin user. If you face any problems please open an issue!
