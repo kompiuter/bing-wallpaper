@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using BingWallpaper.Models;
+using Microsoft.Win32;
 using System;
 using System.Drawing;
 using System.IO;
@@ -9,10 +10,10 @@ namespace BingWallpaper
 {
     public partial class MainForm : Form
     {
-        private IImageProvider _provider;
+        private BingImageProvider _provider;
         private Settings _settings;
 
-        public MainForm(IImageProvider provider, Settings settings)
+        public MainForm(BingImageProvider provider, Settings settings)
         {
             if (provider == null)
                 throw new ArgumentNullException(nameof(provider));

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BingWallpaper.Models
 {
-    public class BingDayImageProvider : IImageProvider
+    public class BingImageProvider
     {
         public async Task<Image> GetImage()
         {
@@ -32,6 +32,7 @@ namespace BingWallpaper.Models
             [DataMember(Name = "images")]
             public BingImage[] images { get; set; }
         }
+
         [DataContract]
         private class BingImage
         {
@@ -41,6 +42,8 @@ namespace BingWallpaper.Models
             public string url { get; set; }
             [DataMember(Name = "urlbase")]
             public string urlbase { get; set; }
+            [DataMember(Name = "copyright")]
+            public string copyright { get; set; }
         }
     }
 

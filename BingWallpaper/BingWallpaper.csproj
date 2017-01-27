@@ -89,7 +89,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Image\BingDayImageProvider.cs" />
+    <Compile Include="Image\BingImageProvider.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Helper\Settings.cs" />
     <Compile Include="Helper\Wallpaper.cs" />
@@ -99,7 +99,6 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Image\IImageProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
