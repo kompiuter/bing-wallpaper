@@ -16,9 +16,9 @@ git clone https://github.com/kompiuter/bing-wallpaper.git
 
  - Open .sln file in Visual Studio
 
- - Build the application
+ - Build
 
- - Run the application
+ - Run
 
 ```
 .../BingWallpaper/bin/Release/BingWallpaper.exe
