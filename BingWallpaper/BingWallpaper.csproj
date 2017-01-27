@@ -92,7 +92,6 @@
     <Compile Include="BingDayImageProvider.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Wallpaper.cs" />
-    <Compile Include="Log.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

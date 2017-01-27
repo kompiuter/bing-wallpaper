@@ -19,8 +19,6 @@ namespace BingWallpaper
             if (provider == null)
                 throw new ArgumentNullException(nameof(provider));
             _provider = provider;
-
-            Log.Print("Bing wallpaper process started");
             
             // Register application with registry so that it runs on startup
             SetStartup(true);
@@ -98,8 +96,6 @@ namespace BingWallpaper
             catch (Exception e)
             {
                 ShowErrorNotification();
-                Log.Print("failed to update wallpaper");
-                Log.Print(e);
             }
         }
 
@@ -134,7 +130,7 @@ namespace BingWallpaper
 
         private void ShowErrorNotification()
         {
-            _trayIcon.BalloonTipText = "Something went wrong, check the log for more information.";
+            _trayIcon.BalloonTipText = "Could not update wallpaper, please check your internet connection.";
             _trayIcon.BalloonTipIcon = ToolTipIcon.Error;
             _trayIcon.Visible = true;
             _trayIcon.ShowBalloonTip(5000);
