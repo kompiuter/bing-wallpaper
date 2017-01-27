@@ -43,7 +43,7 @@ Disable running on startup through the tray icon and delete the executable.
 
 If you forgot to disable startup running and deleted the executable, you can still disable it by either:
  
- - Going to your registry (regedit in Run) and deleting the key `BingWallpaper` under:
+ - Going to your registry (`regedit` in Run) and deleting the key `BingWallpaper` under:
  ```
  HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
  ```
