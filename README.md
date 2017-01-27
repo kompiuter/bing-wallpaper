@@ -24,9 +24,9 @@ git clone https://github.com/kompiuter/bing-wallpaper.git
 .../BingWallpaper/bin/Release/BingWallpaper.exe
 ```
 
-## Download binary
+## Binary
 
-* Download from [Softpedia](http://www.softpedia.com/get/Desktop-Enhancements/Other-Desktop-Enhancements/KK-Bing-Wallpaper.shtml)
+Download from [Softpedia](http://www.softpedia.com/get/Desktop-Enhancements/Other-Desktop-Enhancements/KK-Bing-Wallpaper.shtml)
 
 # What does this do?
 
