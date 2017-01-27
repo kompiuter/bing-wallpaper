@@ -6,7 +6,7 @@ Keep your wallpaper up to date with Bing's image of the day, every day.
 
 # Usage
 
-## Build yourself (recommended)
+## Build yourself
 
  - Grab the code
 
@@ -24,9 +24,8 @@ git clone https://github.com/kompiuter/bing-wallpaper.git
 .../BingWallpaper/bin/Release/BingWallpaper.exe
 ```
 
-## Installation
+## Download binary
 
-* Download source code and build yourself
 * Download from [Softpedia](http://www.softpedia.com/get/Desktop-Enhancements/Other-Desktop-Enhancements/KK-Bing-Wallpaper.shtml)
 
 # What does this do?
