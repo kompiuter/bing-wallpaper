@@ -36,10 +36,11 @@ Running the application will create a background process that changes your deskt
 It adds a key to the registry so that it is run on startup.
 
 A tray icon is visible while the process is running (thanks @MichaelMK) which allows you to:
-*View wallpaper source
-*Force wallpaper update
-*Save wallpaper as image
-*Disable launch on startup.
+
+* View wallpaper source
+* Force wallpaper update
+* Save wallpaper as image
+* Disable launch on startup.
 
 # Uninstall
 
