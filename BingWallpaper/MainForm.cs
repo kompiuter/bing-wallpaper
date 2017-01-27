@@ -13,15 +13,18 @@ namespace BingWallpaper
         private ContextMenu _trayMenu;
 
         private IImageProvider _provider;
+        private Settings _settings;
 
         public MainForm(IImageProvider provider)
         {
             if (provider == null)
                 throw new ArgumentNullException(nameof(provider));
             _provider = provider;
+
+            _settings = new Settings();
             
             // Register application with registry so that it runs on startup
-            SetStartup(true);
+            SetStartup(_settings.LaunchOnStartup);
 
             AddTrayIcons();
             
@@ -41,11 +44,14 @@ namespace BingWallpaper
         /// SetStartup will set the application to automatically launch on startup if b is true,
         /// else it will remove the key from the registry.
         /// </summary>
-        public void SetStartup(bool b)
+        public void SetStartup(bool launch)
         {
             RegistryKey rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-            if (b)
-                rk.SetValue("BingWallpaper", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BingWallpaper.exe"));
+            if (launch)
+            {
+                if (rk.GetValue("BingWallpaper") == null)
+                    rk.SetValue("BingWallpaper", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BingWallpaper.exe"));
+            }
             else
             {
                 if (rk.GetValue("BingWallpaper") != null)
@@ -61,8 +67,8 @@ namespace BingWallpaper
             _trayMenu.MenuItems.Add("Force wallpaper update", (s, e) => SetWallpaper());
 
             var launch = new MenuItem("Launch on startup");
-            launch.Checked = true;
-            launch.Click += OnLaunch;
+            launch.Checked = _settings.LaunchOnStartup;
+            launch.Click += OnStartupLaunch;
             _trayMenu.MenuItems.Add(launch);
 
             _trayMenu.MenuItems.Add("Exit", (s,e) => Application.Exit());
@@ -78,11 +84,12 @@ namespace BingWallpaper
             _trayIcon.Visible = true;
         }
 
-        private void OnLaunch(object sender, EventArgs e)
+        private void OnStartupLaunch(object sender, EventArgs e)
         {
-            var item = (MenuItem)sender;
-            item.Checked = !item.Checked;
-            SetStartup(item.Checked);
+            var launch = (MenuItem)sender;
+            launch.Checked = !launch.Checked;
+            SetStartup(launch.Checked);
+            _settings.LaunchOnStartup = launch.Checked;
         }
 
         public async void SetWallpaper()
