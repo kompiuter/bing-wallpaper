@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
@@ -11,6 +12,7 @@ namespace BingWallpaper
     {
         private BingImageProvider _provider;
         private Settings _settings;
+        private Image _currentWallpaper;
 
         public MainForm(BingImageProvider provider, Settings settings)
         {
@@ -76,6 +78,7 @@ namespace BingWallpaper
                 var bingImg = await _provider.GetImage();
 
                 Wallpaper.Set(bingImg.Img, Wallpaper.Style.Stretched);
+                _currentWallpaper = bingImg.Img;
                 SetCopyrightTrayLabel(bingImg.Copyright, bingImg.CopyrightLink);
 
                 ShowSetWallpaperNotification();
@@ -106,6 +109,7 @@ namespace BingWallpaper
             // Create a simple tray menu with only one item.
             _trayMenu = new ContextMenu();
 
+            // Copyright button
             _copyrightLabel = new MenuItem("Bing Wallpaper");
             _copyrightLabel.Click += (s, e) =>
             {
@@ -117,10 +121,36 @@ namespace BingWallpaper
 
             // Separator
             _trayMenu.MenuItems.Add("-");
+        
+            // Force update button
+            _trayMenu.MenuItems.Add("Force Update", (s, e) => SetWallpaper());
 
-            _trayMenu.MenuItems.Add("Force wallpaper update", (s, e) => SetWallpaper());
+            // Save image button
+            var save = new MenuItem("Save Wallpaper");
+            save.Click += (s, e) =>
+            {
+                if (_currentWallpaper != null)
+                {
+                    var fileName = string.Join("_", _settings.ImageCopyright.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.');
+                    var dialog = new SaveFileDialog
+                    {
+                        DefaultExt = "jpg",
+                        Title = "Save current wallpaper",
+                        FileName = fileName,
+                        Filter = "Jpeg Image|*.jpg",
+                    };
+                    dialog.ShowDialog();
+                    if (dialog.FileName != "")
+                    {
+                        _currentWallpaper.Save(dialog.FileName, ImageFormat.Jpeg);
+                        System.Diagnostics.Process.Start(dialog.FileName);
+                    }
+                }
+            };
+            _trayMenu.MenuItems.Add(save);
 
-            var launch = new MenuItem("Launch on startup");
+            // Launch on startup button
+            var launch = new MenuItem("Launch on Startup");
             launch.Checked = _settings.LaunchOnStartup;
             launch.Click += OnStartupLaunch;
             _trayMenu.MenuItems.Add(launch);
