@@ -44,7 +44,7 @@ namespace BingWallpaper
             set
             {
                 _options.LaunchOnStartup = value;
-                SaveSettings();
+                Save();
             }
         }
 
@@ -54,13 +54,23 @@ namespace BingWallpaper
             set
             {
                 _options.ImgCopyright = value;
-                SaveSettings();
+                Save();
+            }
+        }
+
+        public string ImageCopyrightLink
+        {
+            get { return _options.ImgCopyrightLink; }
+            set
+            {
+                _options.ImgCopyrightLink = value;
+                Save();
             }
         }
 
         #endregion
 
-        private void SaveSettings()
+        private void Save()
         {
             using (var stream = new FileStream(_settingsPath, FileMode.Create))
             {
@@ -75,7 +85,9 @@ namespace BingWallpaper
             [DataMember]
             public bool LaunchOnStartup = true;
             [DataMember]
-            public string ImgCopyright;
+            public string ImgCopyright = "Bing Wallpaper";
+            [DataMember]
+            public string ImgCopyrightLink = "https://www.bing.com";
         }
     }
 }

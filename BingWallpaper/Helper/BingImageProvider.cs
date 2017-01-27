@@ -14,13 +14,13 @@ namespace BingWallpaper
             string baseUri = "https://www.bing.com";
             using (var client = new HttpClient())
             {
-                using (var jsonStream = await client.GetStreamAsync($"http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US"))
+                using (var jsonStream = await client.GetStreamAsync("http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US"))
                 {
                     var ser = new DataContractJsonSerializer(typeof(Result));
                     var res = (Result)ser.ReadObject(jsonStream);
-                    using (var imgStream = await client.GetStreamAsync(new Uri(baseUri + res.images[0].url)))
+                    using (var imgStream = await client.GetStreamAsync(new Uri(baseUri + res.images[0].URL)))
                     {
-                        return new BingImage(Image.FromStream(imgStream), res.images[0].copyright);
+                        return new BingImage(Image.FromStream(imgStream), res.images[0].Copyright, res.images[0].CopyrightLink);
                     }
                 }
             }
@@ -37,24 +37,28 @@ namespace BingWallpaper
         private class ResultImage
         {
             [DataMember(Name = "enddate")]
-            public string enddate { get; set; }
+            public string EndDate { get; set; }
             [DataMember(Name = "url")]
-            public string url { get; set; }
+            public string URL { get; set; }
             [DataMember(Name = "urlbase")]
-            public string urlbase { get; set; }
+            public string URLBase { get; set; }
             [DataMember(Name = "copyright")]
-            public string copyright { get; set; }
+            public string Copyright { get; set; }
+            [DataMember(Name = "copyrightlink")]
+            public string CopyrightLink { get; set; }
         }
     }
 
     public class BingImage
     {
-        public BingImage(Image img, string copyright)
+        public BingImage(Image img, string copyright, string copyrightLink)
         {
             Img = img;
             Copyright = copyright;
+            CopyrightLink = copyrightLink;
         }
         public Image Img { get; set; }
         public string Copyright { get; set; }
+        public string CopyrightLink { get; set; }
     }
 }

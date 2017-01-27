@@ -76,7 +76,7 @@ namespace BingWallpaper
                 var bingImg = await _provider.GetImage();
 
                 Wallpaper.Set(bingImg.Img, Wallpaper.Style.Stretched);
-                SetCopyrightLabel(bingImg.Copyright);
+                SetCopyrightTrayLabel(bingImg.Copyright, bingImg.CopyrightLink);
 
                 ShowSetWallpaperNotification();
             }
@@ -86,10 +86,13 @@ namespace BingWallpaper
             }
         }
 
-        public void SetCopyrightLabel(string copyright)
+        public void SetCopyrightTrayLabel(string copyright, string copyrightLink)
         {
             _settings.ImageCopyright = copyright;
+            _settings.ImageCopyrightLink = copyrightLink;
+
             _copyrightLabel.Text = copyright;
+            _copyrightLabel.Tag = copyrightLink;
         }
         
         #region Tray Icons
@@ -104,6 +107,12 @@ namespace BingWallpaper
             _trayMenu = new ContextMenu();
 
             _copyrightLabel = new MenuItem("Bing Wallpaper");
+            _copyrightLabel.Click += (s, e) =>
+            {
+                var url = ((MenuItem)s).Tag.ToString();
+                if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
+                    System.Diagnostics.Process.Start(url);
+            };
             _trayMenu.MenuItems.Add(_copyrightLabel);
 
             // Separator
