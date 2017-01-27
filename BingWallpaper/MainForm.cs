@@ -139,8 +139,7 @@ namespace BingWallpaper
                         FileName = fileName,
                         Filter = "Jpeg Image|*.jpg",
                     };
-                    dialog.ShowDialog();
-                    if (dialog.FileName != "")
+                    if (dialog.ShowDialog() == DialogResult.OK && dialog.FileName != "")
                     {
                         _currentWallpaper.Save(dialog.FileName, ImageFormat.Jpeg);
                         System.Diagnostics.Process.Start(dialog.FileName);
