@@ -50,7 +50,7 @@ If you forgot to disable startup running and deleted the executable, you can sti
  
 **OR**
  
- - Going to Task Manager -> Startup and disabling `BingWallpaper` from there.
+ - Going to `Task Manager -> Startup` and disabling `BingWallpaper` from there.
 
 # Compatibility
 
