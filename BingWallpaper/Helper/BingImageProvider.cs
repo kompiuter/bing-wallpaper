@@ -5,11 +5,11 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 
-namespace BingWallpaper.Models
+namespace BingWallpaper
 {
     public class BingImageProvider
     {
-        public async Task<Image> GetImage()
+        public async Task<BingImage> GetImage()
         {
             string baseUri = "https://www.bing.com";
             using (var client = new HttpClient())
@@ -20,7 +20,7 @@ namespace BingWallpaper.Models
                     var res = (Result)ser.ReadObject(jsonStream);
                     using (var imgStream = await client.GetStreamAsync(new Uri(baseUri + res.images[0].url)))
                     {
-                        return Image.FromStream(imgStream);
+                        return new BingImage(Image.FromStream(imgStream), res.images[0].copyright);
                     }
                 }
             }
@@ -30,11 +30,11 @@ namespace BingWallpaper.Models
         private class Result
         {
             [DataMember(Name = "images")]
-            public BingImage[] images { get; set; }
+            public ResultImage[] images { get; set; }
         }
 
         [DataContract]
-        private class BingImage
+        private class ResultImage
         {
             [DataMember(Name = "enddate")]
             public string enddate { get; set; }
@@ -47,5 +47,14 @@ namespace BingWallpaper.Models
         }
     }
 
-
+    public class BingImage
+    {
+        public BingImage(Image img, string copyright)
+        {
+            Img = img;
+            Copyright = copyright;
+        }
+        public Image Img { get; set; }
+        public string Copyright { get; set; }
+    }
 }

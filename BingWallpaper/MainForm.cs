@@ -1,5 +1,4 @@
-﻿using BingWallpaper.Models;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System;
 using System.Drawing;
 using System.IO;
@@ -74,8 +73,11 @@ namespace BingWallpaper
         {
             try
             {
-                var img = await _provider.GetImage();
-                Wallpaper.Set(img, Wallpaper.Style.Stretched);
+                var bingImg = await _provider.GetImage();
+
+                Wallpaper.Set(bingImg.Img, Wallpaper.Style.Stretched);
+                SetCopyrightLabel(bingImg.Copyright);
+
                 ShowSetWallpaperNotification();
             }
             catch
@@ -83,16 +85,29 @@ namespace BingWallpaper
                 ShowErrorNotification();
             }
         }
+
+        public void SetCopyrightLabel(string copyright)
+        {
+            _settings.ImageCopyright = copyright;
+            _copyrightLabel.Text = copyright;
+        }
         
         #region Tray Icons
 
         private NotifyIcon _trayIcon;
         private ContextMenu _trayMenu;
+        private MenuItem _copyrightLabel;
 
         public void AddTrayIcons()
         {
             // Create a simple tray menu with only one item.
             _trayMenu = new ContextMenu();
+
+            _copyrightLabel = new MenuItem("Bing Wallpaper");
+            _trayMenu.MenuItems.Add(_copyrightLabel);
+
+            // Separator
+            _trayMenu.MenuItems.Add("-");
 
             _trayMenu.MenuItems.Add("Force wallpaper update", (s, e) => SetWallpaper());
 

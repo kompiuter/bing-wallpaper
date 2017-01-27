@@ -48,6 +48,16 @@ namespace BingWallpaper
             }
         }
 
+        public string ImageCopyright
+        {
+            get { return _options.ImgCopyright; }
+            set
+            {
+                _options.ImgCopyright = value;
+                SaveSettings();
+            }
+        }
+
         #endregion
 
         private void SaveSettings()
@@ -64,6 +74,8 @@ namespace BingWallpaper
         {
             [DataMember]
             public bool LaunchOnStartup = true;
+            [DataMember]
+            public string ImgCopyright;
         }
     }
 }
