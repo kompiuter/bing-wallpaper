@@ -165,10 +165,22 @@ namespace BingWallpaper
             //_trayIcon.Icon = new Icon("Resources/bing-icon.ico", 40, 40);
             _trayIcon.Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
 
+            // open tray icon on left click
+            _trayIcon.MouseUp += (s, e) =>
+            {
+                if (e.Button == MouseButtons.Left)
+                {
+                    MethodInfo mi = typeof(NotifyIcon).GetMethod("ShowContextMenu", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                    mi.Invoke(_trayIcon, null);
+                }
+            };
+
             // Add menu to tray icon and show it.
             _trayIcon.ContextMenu = _trayMenu;
             _trayIcon.Visible = true;
         }
+
+        
 
         private void OnStartupLaunch(object sender, EventArgs e)
         {
