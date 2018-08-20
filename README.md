@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="https://github.com/kompiuter/bing-wallpaper/blob/master/resources/geckorain.jpg?raw=true" alt="gecko" width="728"/>
-</p>
+# Bing每日壁纸
 
 发布一个开源小软件，[Bing每日壁纸](https://github.com/jadepeng/bing-wallpaper)。
 
