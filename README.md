@@ -6,7 +6,7 @@
 
 欢迎大家下载使用，点star！有问题请留言或者提issue。
 
-开源地址： [https://github.com/jadepeng/bing-wallpaper](https://github.com/jadepeng/bing-wallpaper) ，想了解技术原理的请看 [技术方案](./技术方案.md)
+想了解技术原理的请看 [技术方案](./技术方案.md)
 
 <p align="center">
   <img src="https://github.com/kompiuter/bing-wallpaper/blob/master/resources/geckorain.jpg?raw=true" alt="gecko" width="728"/>
@@ -56,7 +56,8 @@
  - 下载代码
 
 ```bash
-git clone https://github.com/kompiuter/bing-wallpaper.git
+git clone https://github.com/jadepeng/bing-wallpaper.git
+
 ````
 
  - Open .sln file in Visual Studio
@@ -75,6 +76,6 @@ git clone https://github.com/kompiuter/bing-wallpaper.git
 
 ## 兼容性
 
-This only works on Windows systems.
+仅支持Windows
 
-I've tested it on Windows 7 and Windows 10 as an admin user. If you face any problems please open an issue!
+已在win10 X64测试，有问题请反馈!
