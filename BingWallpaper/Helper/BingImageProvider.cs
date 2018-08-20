@@ -9,21 +9,87 @@ namespace BingWallpaper
 {
     public class BingImageProvider
     {
-        public async Task<BingImage> GetImage()
+        public async Task<HistoryImage> GetLatestImage()
         {
-            string baseUri = "https://www.bing.com";
+            var story = await GetCoverstory();
+
             using (var client = new HttpClient())
             {
                 using (var jsonStream = await client.GetStreamAsync("http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US"))
                 {
                     var ser = new DataContractJsonSerializer(typeof(Result));
                     var res = (Result)ser.ReadObject(jsonStream);
-                    using (var imgStream = await client.GetStreamAsync(new Uri(baseUri + res.images[0].URL)))
+
+                    return new HistoryImage
                     {
-                        return new BingImage(Image.FromStream(imgStream), res.images[0].Copyright, res.images[0].CopyrightLink);
-                    }
+                        Title = res.images[0].Copyright,
+                        Description = story.para1,
+                        ImageUrl = "http://www.bing.com"+ res.images[0].URL,
+                        Date = DateTime.Now.ToString("yyyy-MM-dd"),
+                        AddDateTime = DateTime.Now.ToString(),
+                        Locate = story.Continent + "," + story.attribute
+                    };
                 }
             }
+   
+        }
+
+        public async Task<Coverstory> GetCoverstory()
+        {
+            using (var client = new HttpClient())
+            {
+
+                using (var jsonStream = await client.GetStreamAsync("https://cn.bing.com/cnhp/coverstory/"))
+                {
+                    var ser = new DataContractJsonSerializer(typeof(Coverstory));
+                    return (Coverstory)ser.ReadObject(jsonStream);      
+                }
+            }
+        }
+
+        [DataContract]
+        public class Coverstory
+        {
+            [DataMember(Name = "date")]
+            public string date { get; set; }
+            [DataMember(Name = "title")]
+            public string title { get; set; }
+            [DataMember(Name = "attribute")]
+            public string attribute { get; set; }
+            [DataMember(Name = "para1")]
+            public string para1 { get; set; }
+            [DataMember(Name = "para2")]
+            public string para2 { get; set; }
+
+            [DataMember(Name = "provider")]
+            public string provider { get; set; }
+            [DataMember(Name = "imageUrl")]
+            public string imageUrl { get; set; }
+            [DataMember(Name = "primaryImageUrl")]
+            public string primaryImageUrl { get; set; }
+            [DataMember(Name = "Country")]
+            public string Country { get; set; }
+            [DataMember(Name = "City")]
+            public string City { get; set; }
+
+
+            [DataMember(Name = "Longitude")]
+            public string Longitude { get; set; }
+
+
+            [DataMember(Name = "Latitude")]
+            public string Latitude { get; set; }
+
+
+            [DataMember(Name = "Continent")]
+            public string Continent { get; set; }
+
+            [DataMember(Name = "CityInEnglish")]
+            public string CityInEnglish { get; set; }
+
+            [DataMember(Name = "CountryCode")]
+            public string CountryCode { get; set; }
+
         }
 
         [DataContract]

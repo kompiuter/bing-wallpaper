@@ -38,12 +38,23 @@ namespace BingWallpaper
 
         #region User settings
 
+
         public bool LaunchOnStartup
         {
             get { return _options.LaunchOnStartup; }
             set
             {
                 _options.LaunchOnStartup = value;
+                Save();
+            }
+        }
+
+        public bool AutoChange
+        {
+            get { return _options.AutoChange; }
+            set
+            {
+                _options.AutoChange = value;
                 Save();
             }
         }
@@ -82,6 +93,9 @@ namespace BingWallpaper
         [DataContract]
         private class Options
         {
+
+            [DataMember]
+            public bool AutoChange = false;
             [DataMember]
             public bool LaunchOnStartup = true;
             [DataMember]
