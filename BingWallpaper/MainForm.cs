@@ -66,8 +66,8 @@ namespace BingWallpaper
             if (settings == null)
                 throw new ArgumentNullException(nameof(settings));
             _settings = settings;
-            
-            // 开机启动注册
+
+            // LaunchOnStartup
             SetStartup(_settings.LaunchOnStartup);
 
             AddTrayIcons();
@@ -77,18 +77,19 @@ namespace BingWallpaper
             timer.Interval = 1000 * 60 * 60 * 24; // 24 hours
             timer.AutoReset = true;
             timer.Enabled = true;
-            timer.Elapsed += (s, e) => SetWallpaper();
+            timer.Elapsed += (s, e) => GetLatestWallpaper();
             timer.Start();
 
-            // 自动切换
+            // Create Auto Change Task
             if (_settings.AutoChange)
             {
                 CreateAutoChangeTask();
             }
 
-            // 更新壁纸
-            SetWallpaper();
+            // Get the latest wallpaper
+            GetLatestWallpaper();
 
+            // open Desk Widget
             new DeskWidget(this).Show();
         }
 
@@ -104,11 +105,11 @@ namespace BingWallpaper
 
         private int getChangeInterval()
         {
-            if (_settings.AutoChangeInterval.Contains("分钟"))
+            if (_settings.AutoChangeInterval.Contains("minutes"))
             {
-                return 1000 * 60 * int.Parse(_settings.AutoChangeInterval.Replace("分钟", ""));
+                return 1000 * 60 * int.Parse(_settings.AutoChangeInterval.Replace("'", ""));
             }
-            return 1000 * 60 * 60 * int.Parse(_settings.AutoChangeInterval.Replace("小时", ""));
+            return 1000 * 60 * 60 * int.Parse(_settings.AutoChangeInterval.Replace("hours", ""));
         }
 
         protected override void OnLoad(EventArgs e)
@@ -120,7 +121,7 @@ namespace BingWallpaper
         }
 
         /// <summary>
-        /// 开启启动
+        /// Launch On Startup
         /// </summary>
         public void SetStartup(bool launch)
         {
@@ -138,9 +139,9 @@ namespace BingWallpaper
         }
 
         /// <summary>
-        /// 获取最新壁纸
+        /// Get Latest Wallpaper
         /// </summary>
-        public async void SetWallpaper()
+        public async void GetLatestWallpaper()
         {
             try
             {
@@ -157,13 +158,16 @@ namespace BingWallpaper
 
         private async System.Threading.Tasks.Task UpdateWallpaper()
         {
-            var img = await CurrentWallpaper.getImage();
-            Wallpaper.Set(img, Wallpaper.Style.Stretched);
-            ShowSetWallpaperNotification();
+            if (CurrentWallpaper != null)
+            {
+                var img = await CurrentWallpaper.getImage();
+                Wallpaper.Set(img, Wallpaper.Style.Stretched);
+                ShowSetWallpaperNotification();
+            }
         }
 
         /// <summary>
-        /// 随机壁纸
+        /// Fetch a random Wallpaper from history
         /// </summary>
         public async void SetRandomWallpaper()
         {
@@ -199,7 +203,7 @@ namespace BingWallpaper
             _trayMenu = new ContextMenu();
 
             // Copyright button
-            _copyrightLabel = new MenuItem("Bing每日壁纸");
+            _copyrightLabel = new MenuItem(Resource.AppName);
             _copyrightLabel.Click += (s, e) =>
             {
                 //var url = ((MenuItem)s).Tag.ToString();
@@ -210,17 +214,17 @@ namespace BingWallpaper
 
             _trayMenu.MenuItems.Add("-");
 
-            _trayMenu.MenuItems.Add("壁纸故事", (s, e) =>
+            _trayMenu.MenuItems.Add(Resource.WallPaperStory, (s, e) =>
             {
                 new WallpaperStoryForm(CurrentWallpaper).ShowDialog();
             });
 
-            _trayMenu.MenuItems.Add("强制更新", (s, e) => SetWallpaper());
+            _trayMenu.MenuItems.Add(Resource.ForceUpdate, (s, e) => GetLatestWallpaper());
 
-            _trayMenu.MenuItems.Add("随机切换", (s, e) => SetRandomWallpaper());
+            _trayMenu.MenuItems.Add(Resource.Random, (s, e) => SetRandomWallpaper());
 
             // Save image button
-            var save = new MenuItem("保存壁纸");
+            var save = new MenuItem(Resource.Save);
             save.Click += async (s, e) =>
             {
                 if (CurrentWallpaper != null)
@@ -229,7 +233,7 @@ namespace BingWallpaper
                     var dialog = new SaveFileDialog
                     {
                         DefaultExt = "jpg",
-                        Title = "保存当前壁纸",
+                        Title = Resource.SaveDialgName,
                         FileName = fileName,
                         Filter = "Jpeg Image|*.jpg",
                     };
@@ -246,16 +250,16 @@ namespace BingWallpaper
             // Separator,下面显示设置
             _trayMenu.MenuItems.Add("-");
 
-            var launch = new MenuItem("开机启动");
+            var launch = new MenuItem(Resource.LaunchOnStartup);
             launch.Checked = _settings.LaunchOnStartup;
             launch.Click += OnStartupLaunch;
             _trayMenu.MenuItems.Add(launch);
 
 
-            var timerChange = new MenuItem("定时切换");
+            var timerChange = new MenuItem(Resource.IntervalChange);
             timerChange.Checked = _settings.AutoChange;
 
-            var timeRanges = new string[] { "10分钟","30分钟","1小时","2小时","3小时","4小时", "5小时", "6小时", "12小时" };
+            var timeRanges = new string[] { "10minutes", "30minutes", "1hours", "2hours", "3hours", "4hours", "5hours", "6hours", "12hours" };
 
             foreach(var timeRange in timeRanges)
             {
@@ -271,10 +275,10 @@ namespace BingWallpaper
             // Separator
             _trayMenu.MenuItems.Add("-");
 
-            _trayMenu.MenuItems.Add("退出", (s, e) => Application.Exit());
+            _trayMenu.MenuItems.Add(Resource.Exit, (s, e) => Application.Exit());
 
             _trayIcon = new NotifyIcon();
-            _trayIcon.Text = "Bing每日壁纸";
+            _trayIcon.Text = Resource.AppName;
             //_trayIcon.Icon = new Icon("Resources/bing-icon.ico", 40, 40);
             _trayIcon.Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
 
