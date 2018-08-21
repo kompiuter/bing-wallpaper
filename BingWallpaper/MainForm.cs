@@ -107,9 +107,9 @@ namespace BingWallpaper
         {
             if (_settings.AutoChangeInterval.Contains("minutes"))
             {
-                return 1000 * 60 * int.Parse(_settings.AutoChangeInterval.Replace("'", ""));
+                return 1000 * 60 * int.Parse(_settings.AutoChangeInterval.Replace("minutes", "").Trim());
             }
-            return 1000 * 60 * 60 * int.Parse(_settings.AutoChangeInterval.Replace("hours", ""));
+            return 1000 * 60 * 60 * int.Parse(_settings.AutoChangeInterval.Replace("hours", "").Replace("hour", "").Trim());
         }
 
         protected override void OnLoad(EventArgs e)
@@ -259,7 +259,7 @@ namespace BingWallpaper
             var timerChange = new MenuItem(Resource.IntervalChange);
             timerChange.Checked = _settings.AutoChange;
 
-            var timeRanges = new string[] { "10minutes", "30minutes", "1hours", "2hours", "3hours", "4hours", "5hours", "6hours", "12hours" };
+            var timeRanges = new string[] { "10 minutes", "30 minutes", "1 hour", "2 hours", "3 hours", "4 hours", "5 hours", "6 hours", "12 hours" };
 
             foreach(var timeRange in timeRanges)
             {
