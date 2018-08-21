@@ -49,6 +49,16 @@ namespace BingWallpaper
             }
         }
 
+        public string AutoChangeInterval
+        {
+            get { return _options.AutoChangeInterval; }
+            set
+            {
+                _options.AutoChangeInterval = value;
+                Save();
+            }
+        }
+
         public bool AutoChange
         {
             get { return _options.AutoChange; }
@@ -102,6 +112,8 @@ namespace BingWallpaper
             public string ImgCopyright = "Bing Wallpaper";
             [DataMember]
             public string ImgCopyrightLink = "https://www.bing.com";
+            [DataMember]
+            public string AutoChangeInterval = "1小时";
         }
     }
 }

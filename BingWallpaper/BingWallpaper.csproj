@@ -28,7 +28,7 @@
     <ProductName>Bing Wallpaper</ProductName>
     <PublisherName>Kyriacos Kyriacou</PublisherName>
     <ApplicationRevision>1</ApplicationRevision>
-    <ApplicationVersion>1.1.0.%2a</ApplicationVersion>
+    <ApplicationVersion>1.2.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -89,8 +89,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeskWidget.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DeskWidget.Designer.cs">
+      <DependentUpon>DeskWidget.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helper\HistoryImage.cs" />
     <Compile Include="Helper\BingImageProvider.cs" />
+    <Compile Include="IWallpaperControl.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Helper\Settings.cs" />
     <Compile Include="Helper\Wallpaper.cs" />
@@ -107,6 +114,9 @@
     <Compile Include="WallpaperStoryForm.Designer.cs">
       <DependentUpon>WallpaperStoryForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="DeskWidget.resx">
+      <DependentUpon>DeskWidget.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

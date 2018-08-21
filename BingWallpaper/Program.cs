@@ -15,6 +15,7 @@ namespace BingWallpaper
             {
                 if (mutex.WaitOne(0, false))
                 {
+                   
                     // Run the application
                     Application.Run(new MainForm(new BingImageProvider(), new Settings()));
                 }

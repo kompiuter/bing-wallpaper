@@ -5,17 +5,57 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace BingWallpaper
 {
-    public partial class MainForm : Form
+    public partial class MainForm : Form, IWallpaperControl
     {
         private BingImageProvider _provider;
         private Settings _settings;
         private HistoryImage _currentWallpaper;
 
-
+      
         System.Timers.Timer autoChangeTimer;
+
+        #region 控制Interface
+
+        public HistoryImage CurrentWallpaper
+        {
+            get { return _currentWallpaper; }
+
+            set {
+                this._currentWallpaper = value;
+                this.WallpaperChange(value);
+            }
+        }
+
+        public delegate void WallpaperChangeHandler(HistoryImage paper);
+
+        public event WallpaperChangeHandler OnWallpaperChange;
+
+        public void WallpaperChange(HistoryImage paper)
+        {
+            OnWallpaperChange?.Invoke(paper);
+        }
+
+        public async void NextWallpaper()
+        {
+            this.CurrentWallpaper = HistoryImageProvider.Next(this.CurrentWallpaper.Date);
+            await UpdateWallpaper();
+        }
+
+        public async void PreWallpaper()
+        {
+            this.CurrentWallpaper = HistoryImageProvider.Previous(this.CurrentWallpaper.Date);
+            await UpdateWallpaper();
+        }
+
+        public void RandomWallpaper()
+        {
+            this.SetRandomWallpaper();
+        }
+        #endregion
 
         public MainForm(BingImageProvider provider, Settings settings)
         {
@@ -48,16 +88,27 @@ namespace BingWallpaper
 
             // 更新壁纸
             SetWallpaper();
+
+            new DeskWidget(this).Show();
         }
 
         private void CreateAutoChangeTask()
         {
             autoChangeTimer = new System.Timers.Timer();
-            autoChangeTimer.Interval = 1000 * 60 * 60 * 1; // 1 hour
+            autoChangeTimer.Interval = getChangeInterval(); // 1 hour
             autoChangeTimer.AutoReset = true;
             autoChangeTimer.Enabled = true;
             autoChangeTimer.Elapsed += (s, e) => SetRandomWallpaper();
             autoChangeTimer.Start();
+        }
+
+        private int getChangeInterval()
+        {
+            if (_settings.AutoChangeInterval.Contains("分钟"))
+            {
+                return 1000 * 60 * int.Parse(_settings.AutoChangeInterval.Replace("分钟", ""));
+            }
+            return 1000 * 60 * 60 * int.Parse(_settings.AutoChangeInterval.Replace("小时", ""));
         }
 
         protected override void OnLoad(EventArgs e)
@@ -93,19 +144,22 @@ namespace BingWallpaper
         {
             try
             {
-                var bingImg = await _provider.GetLatestImage();
-                var img = await bingImg.getImage();
-                Wallpaper.Set(img, Wallpaper.Style.Stretched);
-                _currentWallpaper = bingImg;
-                ShowSetWallpaperNotification();
-
+                CurrentWallpaper = await _provider.GetLatestImage();
+                await UpdateWallpaper();
                 // 保存到历史记录
-                HistoryImageProvider.AddImage(bingImg);
+                HistoryImageProvider.AddImage(CurrentWallpaper);
             }
             catch
             {
                 ShowErrorNotification();
             }
+        }
+
+        private async System.Threading.Tasks.Task UpdateWallpaper()
+        {
+            var img = await CurrentWallpaper.getImage();
+            Wallpaper.Set(img, Wallpaper.Style.Stretched);
+            ShowSetWallpaperNotification();
         }
 
         /// <summary>
@@ -115,11 +169,8 @@ namespace BingWallpaper
         {
             try
             {
-                var bingImg = HistoryImageProvider.getRandom();
-                var img = await bingImg.getImage();
-                Wallpaper.Set(img, Wallpaper.Style.Stretched);
-                _currentWallpaper = bingImg;
-                ShowSetWallpaperNotification();
+                CurrentWallpaper = HistoryImageProvider.getRandom();
+                await UpdateWallpaper();
             }
             catch(Exception ex)
             {
@@ -161,7 +212,7 @@ namespace BingWallpaper
 
             _trayMenu.MenuItems.Add("壁纸故事", (s, e) =>
             {
-                new WallpaperStoryForm(_currentWallpaper).ShowDialog();
+                new WallpaperStoryForm(CurrentWallpaper).ShowDialog();
             });
 
             _trayMenu.MenuItems.Add("强制更新", (s, e) => SetWallpaper());
@@ -172,7 +223,7 @@ namespace BingWallpaper
             var save = new MenuItem("保存壁纸");
             save.Click += async (s, e) =>
             {
-                if (_currentWallpaper != null)
+                if (CurrentWallpaper != null)
                 {
                     var fileName = string.Join("_", _settings.ImageCopyright.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.');
                     var dialog = new SaveFileDialog
@@ -184,7 +235,7 @@ namespace BingWallpaper
                     };
                     if (dialog.ShowDialog() == DialogResult.OK && dialog.FileName != "")
                     {
-                        var image = await _currentWallpaper.getImage();
+                        var image = await CurrentWallpaper.getImage();
                         image.Save(dialog.FileName, ImageFormat.Jpeg);
                         System.Diagnostics.Process.Start(dialog.FileName);
                     }
@@ -203,7 +254,18 @@ namespace BingWallpaper
 
             var timerChange = new MenuItem("定时切换");
             timerChange.Checked = _settings.AutoChange;
-            timerChange.Click += OnAutoChange;
+
+            var timeRanges = new string[] { "10分钟","30分钟","1小时","2小时","3小时","4小时", "5小时", "6小时", "12小时" };
+
+            foreach(var timeRange in timeRanges)
+            {
+                var rangeMenu = new MenuItem(timeRange);
+                rangeMenu.Checked = _settings.AutoChangeInterval == timeRange;
+                rangeMenu.Click += RangeMenu_Click; ;
+                timerChange.MenuItems.Add(rangeMenu);
+            }
+            // 
+            //timerChange.Click += OnAutoChange;
             _trayMenu.MenuItems.Add(timerChange);
 
             // Separator
@@ -231,7 +293,31 @@ namespace BingWallpaper
             _trayIcon.Visible = true;
         }
 
-        
+        private void RangeMenu_Click(object sender, EventArgs e)
+        {
+            var intervalMenu = (MenuItem)sender;      
+            foreach(MenuItem subMenu in intervalMenu.Parent.MenuItems)
+            {
+                subMenu.Checked = false;
+            }
+            intervalMenu.Checked = !intervalMenu.Checked;
+
+            if (autoChangeTimer != null)
+            {
+                autoChangeTimer.Stop();
+                autoChangeTimer.Dispose();
+                autoChangeTimer = null;
+            }
+
+            _settings.AutoChange = intervalMenu.Checked;
+            _settings.AutoChangeInterval = intervalMenu.Text;
+
+            if (intervalMenu.Checked)
+            {
+                CreateAutoChangeTask();
+            }
+           
+        }
 
         private void OnStartupLaunch(object sender, EventArgs e)
         {
@@ -241,27 +327,27 @@ namespace BingWallpaper
             _settings.LaunchOnStartup = launch.Checked;
         }
 
-        private void OnAutoChange(object sender, EventArgs e)
-        {
-            var autochange = (MenuItem)sender;
-            autochange.Checked = !autochange.Checked;
+        //private void OnAutoChange(object sender, EventArgs e)
+        //{
+        //    var autochange = (MenuItem)sender;
+        //    autochange.Checked = !autochange.Checked;
 
-            if (autochange.Checked)
-            {
-                CreateAutoChangeTask();
-            }
-            else
-            {
-                if (autoChangeTimer != null)
-                {
-                    autoChangeTimer.Stop();
-                    autoChangeTimer.Dispose();
-                    autoChangeTimer = null;
-                }
-            }
+        //    if (autochange.Checked)
+        //    {
+        //        CreateAutoChangeTask();
+        //    }
+        //    else
+        //    {
+        //        if (autoChangeTimer != null)
+        //        {
+        //            autoChangeTimer.Stop();
+        //            autoChangeTimer.Dispose();
+        //            autoChangeTimer = null;
+        //        }
+        //    }
 
-            _settings.AutoChange = autochange.Checked;
-        }
+        //    _settings.AutoChange = autochange.Checked;
+        //}
 
         protected override void Dispose(bool isDisposing)
         {
