@@ -8,6 +8,26 @@
 
 想了解技术原理的请看 [技术方案](./技术方案.md)
 
+## V1.2.1 新增特性
+
+### 国际化
+
+支持中英文，跟随系统语言
+
+### 桌面widget
+
+桌面右下角，新增一个widget窗体，可以切换壁纸
+
+![桌面widget](https://www.github.com/jadepeng/blogpic/raw/master/pic/21/1534851591284.png)
+
+点击标题，会打开壁纸故事。
+
+### 定时切换支持选择时间
+
+不再是默认的1小时，允许你自己选择周期
+
+![定时切换支持选择时间](https://www.github.com/jadepeng/blogpic/raw/master/pic/21/1534851696908.png)
+
 <p align="center">
   <img src="https://github.com/kompiuter/bing-wallpaper/blob/master/resources/geckorain.jpg?raw=true" alt="gecko" width="728"/>
 </p>
