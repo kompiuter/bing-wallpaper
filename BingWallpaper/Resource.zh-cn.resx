@@ -141,6 +141,9 @@
   <data name="SaveDialgName" xml:space="preserve">
     <value>保存当前壁纸</value>
   </data>
+  <data name="UpdateDB" xml:space="preserve">
+    <value>升级本地壁纸库</value>
+  </data>
   <data name="WallPaperStory" xml:space="preserve">
     <value>壁纸故事</value>
   </data>

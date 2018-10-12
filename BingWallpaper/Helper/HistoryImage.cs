@@ -13,7 +13,7 @@ namespace BingWallpaper
     {
         static string DataFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "history.json");
         static string BakDataFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "history.json.bak");
-      
+
         static HistoryImageProvider()
         {
             historyImages = LoadHistoryImages();
@@ -28,11 +28,12 @@ namespace BingWallpaper
 
         static List<HistoryImage> LoadHistoryImages()
         {
-            try {
+            try
+            {
                 string[] lines = File.ReadAllLines(DataFile);
                 List<HistoryImage> images = new List<HistoryImage>();
                 var ser = new DataContractJsonSerializer(typeof(HistoryImage));
-                foreach(var line in lines)
+                foreach (var line in lines)
                 {
                     if (line.Trim().Length > 0)
                     {
@@ -40,7 +41,7 @@ namespace BingWallpaper
                     }
                 }
                 return images;
-                }
+            }
             catch
             {
                 if (File.Exists(BakDataFile))
@@ -76,6 +77,11 @@ namespace BingWallpaper
             return null;
         }
 
+        public static bool IsExist(string date)
+        {
+            return date2Image.ContainsKey(date);
+        }
+
         public static HistoryImage Next(string date)
         {
             var key = DateTime.Parse(date).AddDays(1).ToString("yyyy-MM-dd");
@@ -97,13 +103,27 @@ namespace BingWallpaper
         }
 
         public static void AddImage(HistoryImage image)
-        {         
+        {
             if (date2Image.ContainsKey(image.Date))
             {
                 historyImages.Add(image);
                 date2Image.Add(image.Date, image);
                 Save();
-            }     
+            }
+        }
+
+        public static void AddBatch(List<HistoryImage> images)
+        {
+            foreach (var image in images)
+            {
+                if (date2Image.ContainsKey(image.Date))
+                {
+                    historyImages.Add(image);
+                    date2Image.Add(image.Date, image);
+                }
+            }
+            Save();
+
         }
 
         public static void Save()
@@ -173,7 +193,7 @@ namespace BingWallpaper
         {
             get
             {
-                if(this.ImageUrl.StartsWith("http"))
+                if (this.ImageUrl.StartsWith("http"))
                 {
                     return this.ImageUrl;
                 }
@@ -181,23 +201,23 @@ namespace BingWallpaper
                 //"http://h1.ioliu.cn/bing/Shanghai_ZH-CN10665657954_1920x1080.jpg"/
                 // http://h1.ioliu.cn/bing/LakePowellStorm_ZH-CN6822865622_1920x1080.jpg
 
-                return "http://h1.ioliu.cn/bing/" + ImageUrl.Replace("/photo/", "").Replace("?force=download","")+ "_1920x1080.jpg";
+                return "http://h1.ioliu.cn/bing/" + ImageUrl.Replace("/photo/", "").Replace("?force=download", "") + "_1920x1080.jpg";
             }
         }
 
         static string cacheDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cache");
-        
+
         static HistoryImage()
         {
             if (!Directory.Exists(cacheDir))
             {
                 Directory.CreateDirectory(cacheDir);
             }
-        }  
+        }
 
         static async Task<Image> getImageFromUrl(string url)
         {
-            var cacheKey = Path.Combine(cacheDir, url.GetHashCode() + ".jpg"); 
+            var cacheKey = Path.Combine(cacheDir, url.GetHashCode() + ".jpg");
 
             try
             {
@@ -215,7 +235,7 @@ namespace BingWallpaper
             {
                 using (var imgStream = await client.GetStreamAsync(new Uri(url)))
                 {
-                    Image image =  Image.FromStream(imgStream);
+                    Image image = Image.FromStream(imgStream);
                     image.Save(cacheKey);
                     return image;
                 }
@@ -231,7 +251,7 @@ namespace BingWallpaper
         {
             if (image == null)
             {
-               image = await getImageFromUrl(realImageUrl);
+                image = await getImageFromUrl(realImageUrl);
             }
             return image;
         }

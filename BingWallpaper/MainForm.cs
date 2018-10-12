@@ -6,6 +6,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Linq;
+using BingWallpaper.Helper;
 
 namespace BingWallpaper
 {
@@ -15,7 +16,7 @@ namespace BingWallpaper
         private Settings _settings;
         private HistoryImage _currentWallpaper;
 
-      
+
         System.Timers.Timer autoChangeTimer;
 
         #region 控制Interface
@@ -24,7 +25,8 @@ namespace BingWallpaper
         {
             get { return _currentWallpaper; }
 
-            set {
+            set
+            {
                 this._currentWallpaper = value;
                 this.WallpaperChange(value);
             }
@@ -41,14 +43,29 @@ namespace BingWallpaper
 
         public async void NextWallpaper()
         {
-            this.CurrentWallpaper = HistoryImageProvider.Next(this.CurrentWallpaper.Date);
-            await UpdateWallpaper();
+            if (CurrentWallpaper != null)
+            {
+                var newImage = HistoryImageProvider.Next(this.CurrentWallpaper.Date);
+                if (newImage != null)
+                {
+                    this.CurrentWallpaper = newImage;
+                    await UpdateWallpaper();
+                }
+            }
+
         }
 
         public async void PreWallpaper()
         {
-            this.CurrentWallpaper = HistoryImageProvider.Previous(this.CurrentWallpaper.Date);
-            await UpdateWallpaper();
+            if (CurrentWallpaper != null)
+            {
+                var newImage = HistoryImageProvider.Previous(this.CurrentWallpaper.Date);
+                if (newImage != null)
+                {
+                    this.CurrentWallpaper = newImage;
+                    await UpdateWallpaper();
+                }
+            }
         }
 
         public void RandomWallpaper()
@@ -71,7 +88,7 @@ namespace BingWallpaper
             SetStartup(_settings.LaunchOnStartup);
 
             AddTrayIcons();
-            
+
             // 定时更新
             var timer = new System.Timers.Timer();
             timer.Interval = 1000 * 60 * 60 * 24; // 24 hours
@@ -176,7 +193,7 @@ namespace BingWallpaper
                 CurrentWallpaper = HistoryImageProvider.getRandom();
                 await UpdateWallpaper();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ShowErrorNotification();
             }
@@ -190,7 +207,7 @@ namespace BingWallpaper
             _copyrightLabel.Text = copyright;
             _copyrightLabel.Tag = copyrightLink;
         }
-        
+
         #region Tray Icons
 
         private NotifyIcon _trayIcon;
@@ -255,13 +272,15 @@ namespace BingWallpaper
             launch.Click += OnStartupLaunch;
             _trayMenu.MenuItems.Add(launch);
 
+            _trayMenu.MenuItems.Add(Resource.UpdateDB, (s, e) => UpdateLocalData());
+
 
             var timerChange = new MenuItem(Resource.IntervalChange);
             timerChange.Checked = _settings.AutoChange;
 
             var timeRanges = new string[] { "10 minutes", "30 minutes", "1 hour", "2 hours", "3 hours", "4 hours", "5 hours", "6 hours", "12 hours" };
 
-            foreach(var timeRange in timeRanges)
+            foreach (var timeRange in timeRanges)
             {
                 var rangeMenu = new MenuItem(timeRange);
                 rangeMenu.Checked = _settings.AutoChangeInterval == timeRange;
@@ -297,10 +316,24 @@ namespace BingWallpaper
             _trayIcon.Visible = true;
         }
 
+        private void UpdateLocalData()
+        {
+            var images = IoliuBingCrawler.LoadHistoryImages();
+            if (images.Count > 0)
+            {
+                HistoryImageProvider.AddBatch(images);
+                MessageBox.Show("更新了 " + images.Count + "条历史数据");
+            }
+            else
+            {
+                MessageBox.Show("你的本地数据已经很全啦,未找到新数据！");
+            }
+        }
+
         private void RangeMenu_Click(object sender, EventArgs e)
         {
-            var intervalMenu = (MenuItem)sender;      
-            foreach(MenuItem subMenu in intervalMenu.Parent.MenuItems)
+            var intervalMenu = (MenuItem)sender;
+            foreach (MenuItem subMenu in intervalMenu.Parent.MenuItems)
             {
                 subMenu.Checked = false;
             }
@@ -320,7 +353,7 @@ namespace BingWallpaper
             {
                 CreateAutoChangeTask();
             }
-           
+
         }
 
         private void OnStartupLaunch(object sender, EventArgs e)
