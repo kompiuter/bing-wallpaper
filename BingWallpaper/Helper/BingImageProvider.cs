@@ -22,6 +22,7 @@ namespace BingWallpaper
 
                     return new HistoryImage
                     {
+                        Id = Guid.NewGuid().ToString(),
                         Title = res.images[0].Copyright,
                         Description = story.para1,
                         ImageUrl = "http://www.bing.com"+ res.images[0].URL,

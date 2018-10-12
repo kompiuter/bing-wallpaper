@@ -104,7 +104,7 @@ namespace BingWallpaper
 
         public static void AddImage(HistoryImage image)
         {
-            if (date2Image.ContainsKey(image.Date))
+            if (!date2Image.ContainsKey(image.Date))
             {
                 historyImages.Add(image);
                 date2Image.Add(image.Date, image);
@@ -116,7 +116,7 @@ namespace BingWallpaper
         {
             foreach (var image in images)
             {
-                if (date2Image.ContainsKey(image.Date))
+                if (!date2Image.ContainsKey(image.Date))
                 {
                     historyImages.Add(image);
                     date2Image.Add(image.Date, image);
