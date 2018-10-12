@@ -38,7 +38,7 @@ namespace BingWallpaper.Helper
                 {
                     try
                     {
-                        var url = "https://bing.ioliu.cn" + node.SelectSingleNode("//a[@class='mark']").Attributes["href"].Value;
+                        var url = "https://bing.ioliu.cn" + node.SelectSingleNode(".//a[@class='mark']").Attributes["href"].Value;
                         var detailHtml = HttpHelper.SendGet(url);
                         var detailDoc = new HtmlDocument();
                         detailDoc.LoadHtml(detailHtml);
