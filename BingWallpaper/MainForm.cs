@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.Linq;
 using BingWallpaper.Helper;
+using System.Threading;
 
 namespace BingWallpaper
 {
@@ -108,6 +109,12 @@ namespace BingWallpaper
 
             // open Desk Widget
             new DeskWidget(this).Show();
+
+            // 
+            new Thread(() =>
+            {
+                UpdateLatestDaysImage();
+            }).Start();
         }
 
         private void CreateAutoChangeTask()
@@ -169,7 +176,8 @@ namespace BingWallpaper
             }
             catch
             {
-                ShowErrorNotification();
+                CurrentWallpaper = HistoryImageProvider.getRandom();
+                await UpdateWallpaper();
             }
         }
 
@@ -327,6 +335,15 @@ namespace BingWallpaper
             else
             {
                 MessageBox.Show("你的本地数据已经很全啦,未找到新数据！");
+            }
+        }
+
+        private void UpdateLatestDaysImage()
+        {
+            var images = IoliuBingCrawler.LoadLatestDaysImages();
+            if (images.Count > 0)
+            {
+                HistoryImageProvider.AddBatch(images);
             }
         }
 

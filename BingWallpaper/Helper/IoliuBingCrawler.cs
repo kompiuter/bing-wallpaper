@@ -25,6 +25,13 @@ namespace BingWallpaper.Helper
             return result;
         }
 
+        public static List<HistoryImage> LoadLatestDaysImages()
+        {
+            var result = new List<HistoryImage>();
+            var html = HttpHelper.SendGet("https://bing.ioliu.cn/");
+            return result;
+        }
+
         private static void extractImages(List<HistoryImage> result, string indexPageHtml)
         {
             var doc = new HtmlDocument();
