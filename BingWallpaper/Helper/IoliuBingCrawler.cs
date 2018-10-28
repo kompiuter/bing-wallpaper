@@ -15,20 +15,33 @@ namespace BingWallpaper.Helper
         public static List<HistoryImage> LoadHistoryImages()
         {
             var result = new List<HistoryImage>();
-
-            for (var i = 1; i <= MAX_LOAD_PAGE; i++)
+            try
             {
-                var html = HttpHelper.SendGet("https://bing.ioliu.cn/?p=" + i);
-                extractImages(result, html);
+                for (var i = 1; i <= MAX_LOAD_PAGE; i++)
+                {
+                    var html = HttpHelper.SendGet("https://bing.ioliu.cn/?p=" + i);
+                    extractImages(result, html);
+                }
             }
+            catch
+            {
 
+            }
             return result;
         }
 
         public static List<HistoryImage> LoadLatestDaysImages()
         {
             var result = new List<HistoryImage>();
-            var html = HttpHelper.SendGet("https://bing.ioliu.cn/");
+            try
+            {
+                var html = HttpHelper.SendGet("https://bing.ioliu.cn/");
+                extractImages(result, html);
+            }
+            catch
+            {
+
+            }
             return result;
         }
 

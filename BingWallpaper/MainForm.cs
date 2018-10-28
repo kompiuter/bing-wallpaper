@@ -16,6 +16,7 @@ namespace BingWallpaper
         private BingImageProvider _provider;
         private Settings _settings;
         private HistoryImage _currentWallpaper;
+        string CURRENT_FILE_CACHE = "current.img";
 
 
         System.Timers.Timer autoChangeTimer;
@@ -30,6 +31,7 @@ namespace BingWallpaper
             {
                 this._currentWallpaper = value;
                 this.WallpaperChange(value);
+                this.SaveState();
             }
         }
 
@@ -75,6 +77,23 @@ namespace BingWallpaper
         }
         #endregion
 
+        private void ReloadState()
+        {
+            var image = HistoryImage.LoadFromFile(CURRENT_FILE_CACHE);
+            if(image!= null)
+            {
+                this.CurrentWallpaper = image;
+            }
+        }
+
+        private void SaveState()
+        {
+            if (CurrentWallpaper != null)
+            {
+                this.CurrentWallpaper.SaveToFile(CURRENT_FILE_CACHE);
+            }
+        }
+
         public MainForm(BingImageProvider provider, Settings settings)
         {
             if (provider == null)
@@ -104,6 +123,8 @@ namespace BingWallpaper
                 CreateAutoChangeTask();
             }
 
+            this.ReloadState();
+
             // Get the latest wallpaper
             GetLatestWallpaper();
 
@@ -115,6 +136,8 @@ namespace BingWallpaper
             {
                 UpdateLatestDaysImage();
             }).Start();
+
+
         }
 
         private void CreateAutoChangeTask()
@@ -176,8 +199,18 @@ namespace BingWallpaper
             }
             catch
             {
-                CurrentWallpaper = HistoryImageProvider.getRandom();
-                await UpdateWallpaper();
+                try
+                {
+                    CurrentWallpaper = HistoryImageProvider.getRandom();
+                    await UpdateWallpaper();
+                }
+                catch (Exception ex)
+                {
+                    // wait 1 miniute
+                    Thread.Sleep(60000);
+                    GetLatestWallpaper();
+                }
+             
             }
         }
 

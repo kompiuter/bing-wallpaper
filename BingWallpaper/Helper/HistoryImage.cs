@@ -255,8 +255,44 @@ namespace BingWallpaper
             }
             return image;
         }
+
+        public void SaveToFile(String file)
+        {
+            try
+            {
+                using (var stream = new FileStream(file, FileMode.Create))
+                {
+                    var ser = new DataContractJsonSerializer(typeof(HistoryImage));
+                    ser.WriteObject(stream, image);
+
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
+        public static HistoryImage LoadFromFile(string file)
+        {
+            try
+            {
+                if (File.Exists(file))
+                {
+
+                    var ser = new DataContractJsonSerializer(typeof(HistoryImage));
+                    var line = File.ReadAllText(file);
+                    var obj = (HistoryImage)ser.ReadObject(new MemoryStream(System.Text.Encoding.UTF8.GetBytes(line)));
+                    return obj;
+                }
+            }
+            catch
+            {
+
+            }
+            return null;
+
+        }
     }
-
-
 
 }
