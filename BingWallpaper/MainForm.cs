@@ -125,8 +125,14 @@ namespace BingWallpaper
 
             this.ReloadState();
 
-            // Get the latest wallpaper
-            GetLatestWallpaper();
+            new Thread(() =>
+            {
+                // Get the latest wallpaper
+                GetLatestWallpaper();
+
+            }).Start();
+
+         
 
             // open Desk Widget
             new DeskWidget(this).Show();
@@ -190,27 +196,27 @@ namespace BingWallpaper
         /// </summary>
         public async void GetLatestWallpaper()
         {
+            HistoryImage historyImage = null;
+
             try
             {
-                CurrentWallpaper = await _provider.GetLatestImage();
-                await UpdateWallpaper();
+                historyImage = await _provider.GetLatestImage();
                 // 保存到历史记录
-                HistoryImageProvider.AddImage(CurrentWallpaper);
+                HistoryImageProvider.AddImage(historyImage);
+
+            
             }
             catch
             {
-                try
+                historyImage = HistoryImageProvider.getRandom();           
+            }
+            if (historyImage != null)
+            {
+                this.Invoke(new Action(() =>
                 {
-                    CurrentWallpaper = HistoryImageProvider.getRandom();
-                    await UpdateWallpaper();
-                }
-                catch (Exception ex)
-                {
-                    // wait 1 miniute
-                    Thread.Sleep(60000);
-                    GetLatestWallpaper();
-                }
-             
+                    this.CurrentWallpaper = historyImage;
+                    UpdateWallpaper();
+                }));
             }
         }
 
@@ -218,9 +224,16 @@ namespace BingWallpaper
         {
             if (CurrentWallpaper != null)
             {
-                var img = await CurrentWallpaper.getImage();
-                Wallpaper.Set(img, Wallpaper.Style.Stretched);
-                ShowSetWallpaperNotification();
+                try
+                {
+                    var img = await CurrentWallpaper.getImage();
+                    Wallpaper.Set(img, Wallpaper.Style.Stretched);
+                    ShowSetWallpaperNotification();
+                }
+                catch
+                {
+
+                }
             }
         }
 

@@ -183,6 +183,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bing-icon.ico" />
+    <Content Include="Resources\error.jpg" />
     <None Include="Resources\br_next.png" />
     <None Include="Resources\sq_br_next.png" />
     <None Include="Resources\br_prev.png" />

@@ -36,8 +36,16 @@ namespace BingWallpaper
                 this.Text = image.Title;
                 this.lblTitle.Text = image.Title;
 
-                var img = await image.getImage();
-                pictureBox1.Image = img;
+                try
+                {
+                    var img = await image.getImage();
+                    pictureBox1.Image = img;
+                }
+                catch
+                {
+                    pictureBox1.Image = Properties.Resources.error;
+                }
+              
             }
         }
 

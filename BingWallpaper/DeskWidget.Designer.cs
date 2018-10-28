@@ -53,6 +53,7 @@
             // 
             this.btnPre.BackgroundImage = global::BingWallpaper.Properties.Resources.br_prev;
             this.btnPre.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btnPre.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnPre.FlatAppearance.BorderSize = 0;
             this.btnPre.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.btnPre.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
@@ -67,6 +68,7 @@
             // 
             this.btnNext.BackgroundImage = global::BingWallpaper.Properties.Resources.br_next;
             this.btnNext.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btnNext.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnNext.FlatAppearance.BorderSize = 0;
             this.btnNext.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.btnNext.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
@@ -79,13 +81,13 @@
             // 
             // lblLocate
             // 
+            this.lblLocate.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lblLocate.Font = new System.Drawing.Font("微软雅黑", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblLocate.ForeColor = System.Drawing.SystemColors.Control;
             this.lblLocate.Location = new System.Drawing.Point(11, 6);
             this.lblLocate.Name = "lblLocate";
             this.lblLocate.Size = new System.Drawing.Size(276, 50);
-            this.lblLocate.TabIndex = 2;
-            this.lblLocate.Text = "label1";
+            this.lblLocate.TabIndex = 0;
             this.lblLocate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // DeskWidget
