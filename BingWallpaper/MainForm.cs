@@ -212,10 +212,10 @@ namespace BingWallpaper
             }
             if (historyImage != null)
             {
-                this.Invoke(new Action(() =>
+                this.Invoke(new Action(async () =>
                 {
                     this.CurrentWallpaper = historyImage;
-                    UpdateWallpaper();
+                    await UpdateWallpaper();
                 }));
             }
         }

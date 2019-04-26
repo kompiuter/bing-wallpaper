@@ -11,7 +11,7 @@ namespace BingWallpaper
     {
         public async Task<HistoryImage> GetLatestImage()
         {
-            var story = await GetCoverstory();
+            //var story = await GetCoverstory();
 
             using (var client = new HttpClient())
             {
@@ -24,11 +24,11 @@ namespace BingWallpaper
                     {
                         Id = Guid.NewGuid().ToString(),
                         Title = res.images[0].Copyright,
-                        Description = story.para1,
-                        ImageUrl = "http://www.bing.com"+ res.images[0].URL,
+                        Description = res.images[0].Copyright,
+                        ImageUrl = "http://www.bing.com" + res.images[0].URL,
                         Date = DateTime.Now.ToString("yyyy-MM-dd"),
                         AddDateTime = DateTime.Now.ToString(),
-                        Locate = story.Continent + "," + story.attribute
+                        Locate = res.images[0].Copyright.Substring(res.images[0].Copyright.IndexOf("，") + 1, res.images[0].Copyright.IndexOf("(") - res.images[0].Copyright.IndexOf("，")-1)
                     };
                 }
             }
