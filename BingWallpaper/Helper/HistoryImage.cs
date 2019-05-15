@@ -17,27 +17,24 @@ namespace BingWallpaper
         static HistoryImageProvider()
         {
             historyImages = LoadHistoryImages();
-            historyImages.ForEach(image =>
-            {
-                date2Image.Add(image.Date, image);
-            });
         }
 
-        static List<HistoryImage> historyImages;
-        static Dictionary<string, HistoryImage> date2Image = new Dictionary<string, HistoryImage>();
+        static SortedList<string, HistoryImage> historyImages;
 
-        static List<HistoryImage> LoadHistoryImages()
+        static SortedList<string, HistoryImage> LoadHistoryImages()
         {
             try
             {
                 string[] lines = File.ReadAllLines(DataFile);
-                List<HistoryImage> images = new List<HistoryImage>();
+                // List<HistoryImage> images = new List<HistoryImage>();
+                SortedList<string, HistoryImage> images = new SortedList<string, HistoryImage>();
                 var ser = new DataContractJsonSerializer(typeof(HistoryImage));
                 foreach (var line in lines)
                 {
                     if (line.Trim().Length > 0)
                     {
-                        images.Add((HistoryImage)ser.ReadObject(new MemoryStream(System.Text.Encoding.UTF8.GetBytes(line))));
+                        var image = (HistoryImage)ser.ReadObject(new MemoryStream(System.Text.Encoding.UTF8.GetBytes(line)));
+                        images.Add(image.Date, image);
                     }
                 }
                 return images;
@@ -50,7 +47,7 @@ namespace BingWallpaper
                     return LoadHistoryImages();
                 }
 
-                return new List<HistoryImage>();
+                return new SortedList<string, HistoryImage>();
             }
         }
 
@@ -60,7 +57,7 @@ namespace BingWallpaper
         /// <returns></returns>
         public static HistoryImage getRandom()
         {
-            return historyImages[new Random().Next(0, historyImages.Count - 1)];
+            return historyImages.Values[new Random().Next(0, historyImages.Count - 1)];
         }
 
         /// <summary>
@@ -70,44 +67,37 @@ namespace BingWallpaper
         /// <returns></returns>
         public static HistoryImage GetImageByDate(string date)
         {
-            if (date2Image.ContainsKey(date))
+            if (historyImages.ContainsKey(date))
             {
-                return date2Image[date];
+                return historyImages[date];
             }
             return null;
         }
 
         public static bool IsExist(string date)
         {
-            return date2Image.ContainsKey(date);
+            return historyImages.ContainsKey(date);
         }
 
         public static HistoryImage Next(string date)
         {
-            var key = DateTime.Parse(date).AddDays(1).ToString("yyyy-MM-dd");
-            if (date2Image.ContainsKey(key))
-            {
-                return date2Image[key];
-            }
-            return null;
+            var index = historyImages.IndexOfKey(date);
+            var next = Math.Min(index + 1, historyImages.Count);
+            return historyImages.Values[next];
         }
 
         public static HistoryImage Previous(string date)
         {
-            var key = DateTime.Parse(date).AddDays(-1).ToString("yyyy-MM-dd");
-            if (date2Image.ContainsKey(key))
-            {
-                return date2Image[key];
-            }
-            return null;
+            var index = historyImages.IndexOfKey(date);
+            var next = Math.Max(index - 1, 0);
+            return historyImages.Values[next];
         }
 
         public static void AddImage(HistoryImage image)
         {
-            if (!date2Image.ContainsKey(image.Date))
+            if (!historyImages.ContainsKey(image.Date))
             {
-                historyImages.Add(image);
-                date2Image.Add(image.Date, image);
+                historyImages.Add(image.Date, image);
                 Save();
             }
         }
@@ -116,10 +106,9 @@ namespace BingWallpaper
         {
             foreach (var image in images)
             {
-                if (!date2Image.ContainsKey(image.Date))
+                if (!historyImages.ContainsKey(image.Date))
                 {
-                    historyImages.Add(image);
-                    date2Image.Add(image.Date, image);
+                    historyImages.Add(image.Date, image);
                 }
             }
             Save();
@@ -139,11 +128,12 @@ namespace BingWallpaper
                 {
                     var ser = new DataContractJsonSerializer(typeof(HistoryImage));
                     var line = System.Text.Encoding.UTF8.GetBytes("\r\n");
-                    historyImages.ForEach(image =>
+                    for (var i = historyImages.Values.GetEnumerator(); i.MoveNext();)
                     {
+                        var image = i.Current;
                         ser.WriteObject(stream, image);
                         stream.Write(line, 0, line.Length);
-                    });
+                    }
                 }
             }
             catch
@@ -158,7 +148,7 @@ namespace BingWallpaper
     }
 
     [DataContract]
-    public class HistoryImage
+    public class HistoryImage : IComparable
     {
         [DataMember(Name = "_id")]
         public string Id { get; set; }
@@ -256,7 +246,7 @@ namespace BingWallpaper
             return image;
         }
 
-        public void SaveToFile(String file)
+        public void SaveToFile(string file)
         {
             try
             {
@@ -292,6 +282,12 @@ namespace BingWallpaper
             }
             return null;
 
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (obj == null) return 1;
+            return (obj as HistoryImage).Date.CompareTo(this.Date);
         }
     }
 
