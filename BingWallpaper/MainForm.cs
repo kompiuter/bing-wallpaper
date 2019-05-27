@@ -207,7 +207,8 @@ namespace BingWallpaper
 
         private void ShowSetWallpaperNotification()
         {
-            _trayIcon.BalloonTipText = "Wallpaper has been set to Bing's image of the day!";
+            _trayIcon.BalloonTipTitle = "Wallpaper has been set to Bing's image of the day!";
+            _trayicon.BalloonTipText = _copyrightLabel.Text; 
             _trayIcon.BalloonTipIcon = ToolTipIcon.Info;
             _trayIcon.Visible = true;
             _trayIcon.ShowBalloonTip(5000);
