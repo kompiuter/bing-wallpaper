@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using BingWallpaper.Helper;
+
 
 namespace BingWallpaper
 {
@@ -43,17 +45,26 @@ namespace BingWallpaper
         private void WallpaperControl_OnWallpaperChange(HistoryImage paper)
         {
             if (wallpaperControl.CurrentWallpaper != null) {
+                // 远眺格斯韦因斯泰因村和格斯韦因斯泰因城堡
                 var locate = wallpaperControl.CurrentWallpaper.Locate.Split(',').ToList().Last();
+                if(locate.Length == 0)
+                {
+                    locate = wallpaperControl.CurrentWallpaper.Title.GetBefore("(");
+                }
                 this.lblLocate.Text = locate;
             }
         }
 
         private void DeskWidget_Load(object sender, EventArgs e)
         {
-            this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+            // this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+            // 灰色背景，解决白色背景字体毛边问题
+            this.TransparencyKey = Color.Gray;
+            this.BackColor = Color.Gray;
+
             //this.lblLocate.BackColor = 
-                //this.btnNext.BackColor = this.btnPre.BackColor = 
-                //Color.FromArgb(50, 50, 50, 50);
+            //this.btnNext.BackColor = this.btnPre.BackColor = 
+            //Color.FromArgb(50, 50, 50, 50);
             this.lblLocate.Parent = this.btnNext.Parent = this.btnPre.Parent = this.panel1;
             var screenWidth = SystemInformation.WorkingArea.Width;
             var screenHeight = SystemInformation.WorkingArea.Height;

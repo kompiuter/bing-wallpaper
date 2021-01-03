@@ -141,6 +141,9 @@
   <data name="SaveDialgName" xml:space="preserve">
     <value>保存当前壁纸</value>
   </data>
+  <data name="ShowWidget" xml:space="preserve">
+    <value>显示桌面控件</value>
+  </data>
   <data name="UpdateDB" xml:space="preserve">
     <value>升级本地壁纸库</value>
   </data>

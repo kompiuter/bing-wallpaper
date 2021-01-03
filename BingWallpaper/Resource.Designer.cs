@@ -133,6 +133,15 @@ namespace BingWallpaper {
         }
         
         /// <summary>
+        ///   查找类似 Show Desktop Widget 的本地化字符串。
+        /// </summary>
+        internal static string ShowWidget {
+            get {
+                return ResourceManager.GetString("ShowWidget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Update Local Wallpaper DB 的本地化字符串。
         /// </summary>
         internal static string UpdateDB {

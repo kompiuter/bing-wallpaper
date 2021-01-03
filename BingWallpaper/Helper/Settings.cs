@@ -89,6 +89,16 @@ namespace BingWallpaper
             }
         }
 
+        public bool ShowWidget
+        {
+            get { return _options.ShowWidget; }
+            set
+            {
+                _options.ShowWidget = value;
+                Save();
+            }
+        }
+
         #endregion
 
         private void Save()
@@ -103,7 +113,8 @@ namespace BingWallpaper
         [DataContract]
         private class Options
         {
-
+            [DataMember]
+            public bool ShowWidget = true;
             [DataMember]
             public bool AutoChange = false;
             [DataMember]

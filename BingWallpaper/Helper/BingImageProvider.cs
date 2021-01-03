@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BingWallpaper.Helper;
+using System;
 using System.Drawing;
 using System.Net.Http;
 using System.Runtime.Serialization;
@@ -28,7 +29,7 @@ namespace BingWallpaper
                         ImageUrl = "http://www.bing.com" + res.images[0].URL,
                         Date = DateTime.Now.ToString("yyyy-MM-dd"),
                         AddDateTime = DateTime.Now.ToString(),
-                        Locate = res.images[0].Copyright.Substring(res.images[0].Copyright.IndexOf("，") + 1, res.images[0].Copyright.IndexOf("(") - res.images[0].Copyright.IndexOf("，")-1)
+                        Locate = res.images[0].Copyright.GetBetween(" ", "(")
                     };
                 }
             }

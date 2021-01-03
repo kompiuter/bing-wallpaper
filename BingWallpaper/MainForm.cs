@@ -48,11 +48,15 @@ namespace BingWallpaper
         {
             if (CurrentWallpaper != null)
             {
-                var newImage = HistoryImageProvider.Next(this.CurrentWallpaper.Date);
+                var newImage = HistoryImageProvider.Next(CurrentWallpaper.Date);
                 if (newImage != null)
                 {
                     this.CurrentWallpaper = newImage;
                     await UpdateWallpaper();
+                }
+                else
+                {
+                    MessageBox.Show("已经是最后一张了\nAlready the last image");
                 }
             }
 
@@ -62,11 +66,15 @@ namespace BingWallpaper
         {
             if (CurrentWallpaper != null)
             {
-                var newImage = HistoryImageProvider.Previous(this.CurrentWallpaper.Date);
+                var newImage = HistoryImageProvider.Previous(CurrentWallpaper.Date);
                 if (newImage != null)
                 {
                     this.CurrentWallpaper = newImage;
                     await UpdateWallpaper();
+                }
+                else
+                {
+                    MessageBox.Show("已经是第一张了\nAlready the first image");
                 }
             }
         }
@@ -80,7 +88,7 @@ namespace BingWallpaper
         private void ReloadState()
         {
             var image = HistoryImage.LoadFromFile(CURRENT_FILE_CACHE);
-            if(image!= null)
+            if (image != null)
             {
                 this.CurrentWallpaper = image;
             }
@@ -99,10 +107,7 @@ namespace BingWallpaper
             if (provider == null)
                 throw new ArgumentNullException(nameof(provider));
             _provider = provider;
-
-            if (settings == null)
-                throw new ArgumentNullException(nameof(settings));
-            _settings = settings;
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
 
             // LaunchOnStartup
             SetStartup(_settings.LaunchOnStartup);
@@ -110,12 +115,7 @@ namespace BingWallpaper
             AddTrayIcons();
 
             // 定时更新
-            var timer = new System.Timers.Timer();
-            timer.Interval = 1000 * 60 * 60 * 24; // 24 hours
-            timer.AutoReset = true;
-            timer.Enabled = true;
-            timer.Elapsed += (s, e) => GetLatestWallpaper();
-            timer.Start();
+            CreateDaylyUpdateTimer();
 
             // Create Auto Change Task
             if (_settings.AutoChange)
@@ -123,7 +123,30 @@ namespace BingWallpaper
                 CreateAutoChangeTask();
             }
 
-            this.ReloadState();
+            if (_settings.ShowWidget)
+            {
+                // open Desk Widget
+                ShowDeskWidget();
+            }
+
+            LoadWallPaper();
+        }
+
+        private DeskWidget deskWidget;
+
+        private void ShowDeskWidget()
+        {
+            if (deskWidget == null)
+            {
+                deskWidget = new DeskWidget(this);
+            }
+
+            deskWidget.Show();
+        }
+
+        private void LoadWallPaper()
+        {
+            ReloadState();
 
             new Thread(() =>
             {
@@ -132,18 +155,21 @@ namespace BingWallpaper
 
             }).Start();
 
-         
-
-            // open Desk Widget
-            new DeskWidget(this).Show();
-
-            // 
+            // 从第三方网站更新遗漏的壁纸
             new Thread(() =>
             {
                 UpdateLatestDaysImage();
             }).Start();
+        }
 
-
+        private void CreateDaylyUpdateTimer()
+        {
+            var timer = new System.Timers.Timer();
+            timer.Interval = 1000 * 60 * 60 * 24; // 24 hours
+            timer.AutoReset = true;
+            timer.Enabled = true;
+            timer.Elapsed += (s, e) => GetLatestWallpaper();
+            timer.Start();
         }
 
         private void CreateAutoChangeTask()
@@ -203,16 +229,15 @@ namespace BingWallpaper
                 historyImage = await _provider.GetLatestImage();
                 // 保存到历史记录
                 HistoryImageProvider.AddImage(historyImage);
-
-            
             }
             catch
             {
-                historyImage = HistoryImageProvider.getRandom();           
+                historyImage = HistoryImageProvider.getRandom();
             }
+
             if (historyImage != null)
             {
-                this.Invoke(new Action(async () =>
+                Invoke(new Action(async () =>
                 {
                     this.CurrentWallpaper = historyImage;
                     await UpdateWallpaper();
@@ -326,6 +351,13 @@ namespace BingWallpaper
             launch.Click += OnStartupLaunch;
             _trayMenu.MenuItems.Add(launch);
 
+            var showWidget = new MenuItem(Resource.ShowWidget);
+            showWidget.Checked = _settings.ShowWidget;
+            showWidget.Click += onShowWidgetChecked;
+            _trayMenu.MenuItems.Add(showWidget);
+
+
+
             _trayMenu.MenuItems.Add(Resource.UpdateDB, (s, e) => UpdateLocalData());
 
 
@@ -425,6 +457,24 @@ namespace BingWallpaper
             launch.Checked = !launch.Checked;
             SetStartup(launch.Checked);
             _settings.LaunchOnStartup = launch.Checked;
+        }
+
+        private void onShowWidgetChecked(object sender, EventArgs e)
+        {
+            var showWidgetItem = (MenuItem)sender;
+            showWidgetItem.Checked = !showWidgetItem.Checked;
+            _settings.ShowWidget = showWidgetItem.Checked;
+            if (!_settings.ShowWidget)
+            {
+                if (deskWidget != null)
+                {
+                    deskWidget.Hide();
+                }
+            }
+            else
+            {
+                ShowDeskWidget();
+            }
         }
 
         //private void OnAutoChange(object sender, EventArgs e)

@@ -141,6 +141,9 @@
   <data name="SaveDialgName" xml:space="preserve">
     <value>Save current wallpaper</value>
   </data>
+  <data name="ShowWidget" xml:space="preserve">
+    <value>Show Desktop Widget</value>
+  </data>
   <data name="UpdateDB" xml:space="preserve">
     <value>Update Local Wallpaper DB</value>
   </data>

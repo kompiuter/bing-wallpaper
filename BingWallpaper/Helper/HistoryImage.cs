@@ -81,16 +81,22 @@ namespace BingWallpaper
 
         public static HistoryImage Next(string date)
         {
-            var index = historyImages.IndexOfKey(date);
-            var next = Math.Min(index + 1, historyImages.Count);
-            return historyImages.Values[next];
+            var index = historyImages.IndexOfKey(date) + 1;
+            if(index <= historyImages.Count - 1)
+            {
+                return historyImages.Values[index];
+            }
+            return null;
         }
 
         public static HistoryImage Previous(string date)
         {
-            var index = historyImages.IndexOfKey(date);
-            var next = Math.Max(index - 1, 0);
-            return historyImages.Values[next];
+            var index = historyImages.IndexOfKey(date) - 1;
+            if (index >= 0)
+            {
+                return historyImages.Values[index];
+            }
+            return null;
         }
 
         public static void AddImage(HistoryImage image)
