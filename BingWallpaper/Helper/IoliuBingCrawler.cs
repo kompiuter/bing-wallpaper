@@ -96,7 +96,7 @@ namespace BingWallpaper.Helper
 
             if(result.Locate.Length == 0)
             {
-                result.Locate = result.Title.GetBetween(" ", "(");
+                result.Locate = result.Title.GetBetween("，", "(");
             }
 
             return result;

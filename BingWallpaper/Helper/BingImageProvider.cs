@@ -29,7 +29,7 @@ namespace BingWallpaper
                         ImageUrl = "http://www.bing.com" + res.images[0].URL,
                         Date = DateTime.Now.ToString("yyyy-MM-dd"),
                         AddDateTime = DateTime.Now.ToString(),
-                        Locate = res.images[0].Copyright.GetBetween(" ", "(")
+                        Locate = res.images[0].Copyright.GetBetween("，", "(")
                     };
                 }
             }
