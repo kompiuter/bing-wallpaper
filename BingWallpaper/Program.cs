@@ -15,6 +15,13 @@ namespace BingWallpaper
             {
                 if (mutex.WaitOne(0, false))
                 {
+                    if (Environment.OSVersion.Version.Major >= 6)
+                    {
+                        SetProcessDPIAware();
+                    }
+
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
                     // Run the application
                     Application.Run(new MainForm(new BingImageProvider(), new Settings()));
                 }
@@ -32,5 +39,8 @@ namespace BingWallpaper
                 }
             }
         }
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern bool SetProcessDPIAware();
     }
 }

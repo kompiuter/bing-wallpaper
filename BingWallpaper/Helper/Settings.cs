@@ -38,12 +38,33 @@ namespace BingWallpaper
 
         #region User settings
 
+
         public bool LaunchOnStartup
         {
             get { return _options.LaunchOnStartup; }
             set
             {
                 _options.LaunchOnStartup = value;
+                Save();
+            }
+        }
+
+        public string AutoChangeInterval
+        {
+            get { return _options.AutoChangeInterval; }
+            set
+            {
+                _options.AutoChangeInterval = value;
+                Save();
+            }
+        }
+
+        public bool AutoChange
+        {
+            get { return _options.AutoChange; }
+            set
+            {
+                _options.AutoChange = value;
                 Save();
             }
         }
@@ -68,6 +89,16 @@ namespace BingWallpaper
             }
         }
 
+        public bool ShowWidget
+        {
+            get { return _options.ShowWidget; }
+            set
+            {
+                _options.ShowWidget = value;
+                Save();
+            }
+        }
+
         #endregion
 
         private void Save()
@@ -83,11 +114,17 @@ namespace BingWallpaper
         private class Options
         {
             [DataMember]
+            public bool ShowWidget = true;
+            [DataMember]
+            public bool AutoChange = false;
+            [DataMember]
             public bool LaunchOnStartup = true;
             [DataMember]
             public string ImgCopyright = "Bing Wallpaper";
             [DataMember]
             public string ImgCopyrightLink = "https://www.bing.com";
+            [DataMember]
+            public string AutoChangeInterval = "1小时";
         }
     }
 }
